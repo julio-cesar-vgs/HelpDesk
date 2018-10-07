@@ -1,10 +1,17 @@
 package com.schoolofnet.helpdesk.domain;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
@@ -39,6 +46,10 @@ public class User {
 
 	@Column
 	private boolean active;
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
 
 	public Long getId() {
 		return id;
@@ -106,6 +117,14 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 }
