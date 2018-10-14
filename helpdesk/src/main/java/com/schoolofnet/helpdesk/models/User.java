@@ -1,4 +1,4 @@
-package com.schoolofnet.helpdesk.domain;
+package com.schoolofnet.helpdesk.models;
 
 import java.util.Set;
 
