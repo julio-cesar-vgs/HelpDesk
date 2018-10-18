@@ -20,7 +20,7 @@ public class Role {
 	private Long id;
 
 	@Column
-	@NotEmpty(message = "Can't be empty")
+	@NotEmpty(message = "Este campo não pode ser em branco")
 	private String name;
 
 	public Role() {
@@ -47,5 +47,4 @@ public class Role {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

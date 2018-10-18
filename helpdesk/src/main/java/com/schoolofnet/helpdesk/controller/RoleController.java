@@ -42,7 +42,7 @@ public class RoleController {
 	@PostMapping
 	public String save(@Valid @ModelAttribute("role") Role role, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "redirect:/roles/new";
+			return "/roles/create";
 		}
 
 		this.roleService.create(role);

@@ -5,20 +5,21 @@
 
 
 <th:block layout:fragment="content">
-	<form action="" th:action="@{/roles/}" th:object="${role}"
-		th:method="post">
-		<div class="form-group">
-			<input type="text" th:field="*{name}" name="name"
-				placeholder="Enter role name:" class="form-control" />
-		</div>
-
-		<div class="form-group">
-
-
-			<button type="submit" class="btn btn-primary">Salvar Novo Usuario</button>
-		</div>
-
-	</form>
+	<div class="col-xs-12 col-md-12 text-center">
+		<h4>Criar uma nova regra</h4>
+		<form action="" th:action="@{/roles/}" th:object="${role}"
+			th:method="post">
+			<div class="form-group">
+				<input type="text" th:field="*{name}" name="name"
+					placeholder="Insira nome da nova regra:" class="form-control" /> <span
+					class="text-danger" th:if="${#fields.hasErrors('name')}"
+					th:errors="*{name}">Nome da regra esta errada</span>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">Salvar Regra</button>
+			</div>
+		</form>
+	</div>
 </th:block>
 
 </html>
