@@ -8,13 +8,17 @@
 		<thead>
 			<tr>
 				<th>Name</th>
+				<th>Last Name</th>
+				<th>active</th>
 				<th>Email</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>Julio</td>
-				<td>julio.cesar@gmail.com</td>
+			<tr th:each="user: ${list}">
+				<td th:text="${user.name}"></td>
+				<td th:text="${user.lastName}"></td>
+				<td th:text="${user.active}"></td>
+				<td th:text="${user.email}"></td>
 			</tr>
 		</tbody>
 	</table>

@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -30,12 +29,12 @@ public class User {
 	@NotEmpty(message = "Must be not empty")
 	private String name;
 
-	@Column
+	@Column(unique = true)
 	@Email(message = "Por favor informe um email valido")
 	@NotEmpty(message = "Must be not empty")
 	private String email;
 
-	@Column
+	@Column(name = "lastname")
 	@NotEmpty(message = "Must be not empty")
 	private String lastName;
 
@@ -45,7 +44,7 @@ public class User {
 	private String password;
 
 	@Column
-	private boolean active;
+	private boolean active = true;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
