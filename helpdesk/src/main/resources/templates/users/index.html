@@ -1,32 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org/" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/" layout:decorator="layout">
+<html xmlns:th="http://thymeleaf.org/"
+	xmlns:layout="http://ultraq.net.nz/thymeleaf/layout/"
+	layout:decorator="layout">
 
 <th:block layout:fragment="content">
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Last Name</th>
-				<th>active</th>
-				<th>Email</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="user: ${list}">
-				<td th:text="${user.name}"></td>
-				<td th:text="${user.lastName}"></td>
-				<td th:text="${user.active}"></td>
-				<td th:text="${user.email}"></td>
-				<td>Action</td>
-				<td>
+	<div class="col-xs-12 col-md-12">
+		<a href="/users/new" class="btn btn-success">Criar um novo Usuario</a>
+	</div>
+	<div class="col-xs-12 col-md-12">
+		<h5 class="mt-04 mb-04">Listar Usuarios</h5>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Last Name</th>
+					<th>active</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user: ${list}">
+					<td th:text="${user.name}"></td>
+					<td th:text="${user.lastName}"></td>
+					<td th:text="${user.active}"></td>
+					<td th:text="${user.email}"></td>
+					<td>Action</td>
+					<td>
 
-					<form th:action="@{/users/{id}(id = ${user.id})}" th:method="delete">
-						<button type="submit" class="btn btn-danger">Delete</button>
-					</form>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+						<form th:action="@{/users/{id}(id = ${user.id})}"
+							th:method="delete">
+							<button type="submit" class="btn btn-danger">Delete</button>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </th:block>
 
 </html>
