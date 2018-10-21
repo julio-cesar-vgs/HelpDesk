@@ -1,12 +1,16 @@
 package com.schoolofnet.helpdesk.services;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.schoolofnet.helpdesk.models.Role;
 import com.schoolofnet.helpdesk.models.User;
+import com.schoolofnet.helpdesk.repository.RolesRepository;
 import com.schoolofnet.helpdesk.repository.UserRepository;
 
 @Service
@@ -14,12 +18,19 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RolesRepository roleRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	public UserServiceImpl(UserRepository userRepository) {
+
+	public UserServiceImpl(UserRepository userRepository, RolesRepository roleRepository,
+			BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	@Override
@@ -31,6 +42,10 @@ public class UserServiceImpl implements UserService {
 	public User create(User user) {
 		// funcao para codificar a senha do usuario.
 		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+		
+		Role userRole = this.roleRepository.findByName("USER");
+		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+		
 		return this.userRepository.save(user);
 	}
 

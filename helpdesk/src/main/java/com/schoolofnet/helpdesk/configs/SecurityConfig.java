@@ -15,27 +15,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
 	@Autowired
 	private DataSource dataSource;
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.jdbcAuthentication()
-				.usersByUsernameQuery(" select usr.email, usr.password, usr.active from users usr where usr.email = ? and usr.active = 1")
-				.authoritiesByUsernameQuery(" select usr.email, rl.name from users usr " +
-											" inner join users_roles usrr on (usr.id = usrr.user_id) " +
-											" inner join roles rl on (usrr.role_id = rl.id)" +
-											" where usr.email = ? " +
-											" and   usr.active = 1")
-				.dataSource(dataSource)
-				.passwordEncoder(bCryptPasswordEncoder); 
-		
-	}
 	
 	
 	@Override
@@ -48,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/registration")
 				.permitAll()
 			.antMatchers("/**")
-				.hasAnyAuthority("ADMIN", "USER")
+				.hasAnyAuthority("admin", "user")
 				.anyRequest()
 			.authenticated()
 				.and()
@@ -68,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.exceptionHandling() 
 					.accessDeniedPage("/denied");
 	}
-
+	
 	@Override
 	public void configure(WebSecurity webSecurity) {
 		webSecurity
@@ -81,5 +65,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/images/**", 
 					"/resources/**"
 			);
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+			.jdbcAuthentication()
+				.usersByUsernameQuery(" select usr.email, usr.password, usr.active from users usr where usr.email = ? and usr.active = 1")
+				.authoritiesByUsernameQuery(" select usr.email, rl.name from users usr " +
+											" inner join users_roles usrr on (usr.id = usrr.user_id) " +
+											" inner join roles rl on (usrr.role_id = rl.id)" +
+											" where usr.email = ? " +
+											" and   usr.active = 1")
+				.dataSource(dataSource)
+				.passwordEncoder(bCryptPasswordEncoder); 
+		
 	}
 }
