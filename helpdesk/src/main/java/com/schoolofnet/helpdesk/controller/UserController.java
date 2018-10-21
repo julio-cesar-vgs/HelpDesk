@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.schoolofnet.helpdesk.models.User;
@@ -46,8 +47,11 @@ public class UserController {
 		return "users/create";
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Long id, Model model) {
+		User user = this.userService.show(id);
+		model.addAttribute("user", user);
+
 		return "users/edit";
 	}
 
@@ -66,12 +70,21 @@ public class UserController {
 	public List<User> listarTudo() {
 		return repository.findAll();
 	}
-	
-	
+
+	@PutMapping("{id}")
+	public String update(@PathVariable("id") Long id, @Valid @ModelAttribute("user") User user,
+			BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "users/edit";
+		}
+		this.userService.update(id, user);
+		return "redirect:/users";
+	}
+
 	@DeleteMapping("{id}")
-	public String delete(@PathVariable ("id") Long id) {
+	public String delete(@PathVariable("id") Long id) {
 		this.userService.delete(id);
-		
+
 		return "redirect:/users";
 	}
 

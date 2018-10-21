@@ -16,7 +16,7 @@
 					<th>Last Name</th>
 					<th>active</th>
 					<th>Email</th>
-					<td>Action</td>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -26,7 +26,6 @@
 					<td th:text="${user.active}"></td>
 					<td th:text="${user.email}"></td>
 					<td>
-
 						<form th:action="@{/users/{id}(id = ${user.id})}"
 							th:method="delete">
 							<button type="submit" class="btn btn-danger">Delete</button>
