@@ -75,7 +75,7 @@ public class UserController {
 	public String update(@PathVariable("id") Long id, @Valid @ModelAttribute("user") User user,
 			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "users/edit";
+			return "users/edit/{id}";
 		}
 		this.userService.update(id, user);
 		return "redirect:/users";

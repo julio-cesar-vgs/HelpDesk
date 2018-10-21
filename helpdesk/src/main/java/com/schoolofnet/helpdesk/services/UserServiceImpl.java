@@ -3,6 +3,7 @@ package com.schoolofnet.helpdesk.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.schoolofnet.helpdesk.models.User;
@@ -13,6 +14,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
@@ -25,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User user) {
+		// funcao para codificar a senha do usuario.
+		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 		return this.userRepository.save(user);
 	}
 
@@ -52,7 +58,9 @@ public class UserServiceImpl implements UserService {
 			userExists.setName(user.getName());
 			userExists.setActive(user.isActive());
 			userExists.setLastName(user.getLastName());
-			userExists.setPassword(user.getPassword());
+			// sempre usar o user do item e nunca do que usuario que retorna para nao ter um
+			// encode de uma senha codificada.
+			userExists.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 			userExists.setEmail(user.getEmail());
 
 			this.userRepository.save(userExists);

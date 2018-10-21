@@ -40,7 +40,7 @@ public class User {
 
 	@Column
 	@NotEmpty(message = "Must be not empty")
-	@Length(min = 5, max = 15, message = "You need to provide a password that contains at least 5 characters ")
+	@Length(min = 5, max = 60, message = "You need to provide a password that contains at least 5 characters ")
 	private String password;
 
 	@Column
