@@ -11,7 +11,4 @@ public class AuthController {
 	public String login(Model model) {
 		return "auth/login";
 	}
-	
-	
-
 }
