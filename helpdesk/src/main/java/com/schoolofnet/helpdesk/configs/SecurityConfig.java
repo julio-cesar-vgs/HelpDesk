@@ -10,75 +10,42 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private DataSource dataSource;
-	
+
+	@Autowired
+	private AuthenticationEntryPoint authEntryPoint;
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		http
-			.authorizeRequests()
-			.antMatchers("/login")
-				.permitAll()
-			.antMatchers("/registration")
-				.permitAll()
-			.antMatchers("/**")
-				.hasAnyAuthority("admin", "user")
-				.anyRequest()
-			.authenticated()
-				.and()
-				.csrf()
-				.disable()
-				.formLogin()
-			.loginPage("/login")
-				.failureUrl("/login?errors=true")
-				.defaultSuccessUrl("/users")
-				.usernameParameter("email")
-				.passwordParameter("password")
-			.and()
-			.logout()
-				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-				.logoutSuccessUrl("/")
-					.and()
-					.exceptionHandling() 
-					.accessDeniedPage("/denied");
+
+		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/registration").permitAll()
+				.antMatchers("/**").hasAnyAuthority("admin", "user").anyRequest().authenticated().and().httpBasic()
+				.authenticationEntryPoint(authEntryPoint);
 	}
-	
+
 	@Override
 	public void configure(WebSecurity webSecurity) {
-		webSecurity
-			.ignoring()
-			.antMatchers(
-					"/static/**", 
-					"/js/**", 
-					"/css/**", 
-					"/videos/**", 
-					"/images/**", 
-					"/resources/**"
-			);
+		webSecurity.ignoring().antMatchers("/static/**", "/js/**", "/css/**", "/videos/**", "/images/**",
+				"/resources/**");
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.jdbcAuthentication()
-				.usersByUsernameQuery(" select usr.email, usr.password, usr.active from users usr where usr.email = ? and usr.active = 1")
-				.authoritiesByUsernameQuery(" select usr.email, rl.name from users usr " +
-											" inner join users_roles usrr on (usr.id = usrr.user_id) " +
-											" inner join roles rl on (usrr.role_id = rl.id)" +
-											" where usr.email = ? " +
-											" and   usr.active = 1")
-				.dataSource(dataSource)
-				.passwordEncoder(bCryptPasswordEncoder); 
-		
+		auth.jdbcAuthentication().usersByUsernameQuery(
+				" select usr.email, usr.password, usr.active from users usr where usr.email = ? and usr.active = 1")
+				.authoritiesByUsernameQuery(" select usr.email, rl.name from users usr "
+						+ " inner join users_roles usrr on (usr.id = usrr.user_id) "
+						+ " inner join roles rl on (usrr.role_id = rl.id)" + " where usr.email = ? "
+						+ " and   usr.active = 1")
+				.dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
+
 	}
 }
