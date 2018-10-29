@@ -26,8 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.authorizeRequests().antMatchers("/login").permitAll().antMatchers("/registration").permitAll()
-				.antMatchers("/**").hasAnyAuthority("admin", "user").anyRequest().authenticated().and().httpBasic()
+		http.authorizeRequests().antMatchers("/login")
+		.permitAll()
+		.antMatchers("/registration")
+		.permitAll()
+				.antMatchers("/**")
+				.hasAnyAuthority("admin", "user")
+				.anyRequest()
+				.authenticated().and().httpBasic()
 				.authenticationEntryPoint(authEntryPoint);
 	}
 
@@ -46,6 +52,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						+ " inner join roles rl on (usrr.role_id = rl.id)" + " where usr.email = ? "
 						+ " and   usr.active = 1")
 				.dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
-
 	}
 }
