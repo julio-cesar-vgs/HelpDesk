@@ -77,6 +77,11 @@ public class UserServiceImpl implements UserService {
 			// encode de uma senha codificada.
 			userExists.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 			userExists.setEmail(user.getEmail());
+			
+			
+			Role userRole = this.roleRepository.findByName(user.getRoles().iterator().next().getName());
+			userExists.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+			
 
 			this.userRepository.save(userExists);
 

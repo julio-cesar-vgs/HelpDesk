@@ -1,5 +1,7 @@
 package com.schoolofnet.helpdesk.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +16,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.schoolofnet.helpdesk.models.Role;
 import com.schoolofnet.helpdesk.models.User;
+import com.schoolofnet.helpdesk.services.RoleService;
 import com.schoolofnet.helpdesk.services.UserService;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
-	
-	public UserController(UserService userService) {
+
+	@Autowired
+	private RoleService roleService;
+
+	public UserController(UserService userService, RoleService roleService) {
 		this.userService = userService;
+		this.roleService = roleService;
 	}
 
 	@GetMapping
@@ -33,49 +41,54 @@ public class UserController {
 		model.addAttribute("list", this.userService.findAll());
 		return "users/index";
 	}
-	
+
 	@GetMapping("/new")
 	public String create(Model model) {
 		model.addAttribute("user", new User());
 		return "users/create";
 	}
-	
+
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Long id, Model model) {
 		User user = this.userService.show(id);
+	
+		List<Role> roles = this.roleService.findAll();
 		
 		model.addAttribute("user", user);
+		model.addAttribute("roles", roles);
 		
 		return "users/edit";
 	}
-	
-	
+
 	@PostMapping
 	public String save(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			return "users/create";
 		}
-		
+
 		this.userService.create(user);
-		
+
 		return "redirect:/users";
 	}
-	
+
 	@PutMapping("{id}")
-	public String update(@PathVariable("id") Long id, @Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+	public String update(@PathVariable("id") Long id, @Valid @ModelAttribute("user") User user,
+			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
+			List<Role> roles = this.roleService.findAll();
+			model.addAttribute("roles", roles);
 			return "users/edit";
 		}
-		
+
 		this.userService.update(id, user);
-		
+
 		return "redirect:/users";
 	}
-	
+
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable("id") Long id, Model model) {
 		this.userService.delete(id);
-		
+
 		return "redirect:/users";
 	}
 }
