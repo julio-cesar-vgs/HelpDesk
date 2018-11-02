@@ -21,19 +21,22 @@
 			</thead>
 			<tbody>
 				<tr th:each="user: ${list}">
-					<td th:text="${user.name}"><a th:href="@{'/users/edit/'(id=${user.id})}"></a></td>
+					<td th:text="${user.name}"><a
+						th:href="@{'/users/edit/'(id=${user.id})}"></a></td>
 					<td th:text="${user.lastName}"></td>
-					<td th:text="${user.active}"></td>
 					<td th:text="${user.email}"></td>
+					<td th:switch="${user.active}"><span th:case="${true}"
+						class="badge badge-success" th:text="${user.active}"></span> <span
+						th:case="${false}" class="badge badge-warning"
+						th:text="${user.active}"></span></td>
 					<td>
 						<form th:action="@{/users/{id}(id = ${user.id})}"
 							th:method="delete">
 							<button type="submit" class="btn btn-danger">Delete</button>
 						</form>
 					</td>
-					<td>
-					<a th:href="@{'/users/edit/{id}'(id=${user.id})}" class="btn btn-info">Editar</a>
-					</td>
+					<td><a th:href="@{'/users/edit/{id}'(id=${user.id})}"
+						class="btn btn-info">Editar</a></td>
 				</tr>
 			</tbody>
 		</table>
