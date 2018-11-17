@@ -6,10 +6,9 @@
 
 <th:block layout:fragment="content">
 	<div class="col-xs-12 col-md-12">
-		<h2>
+		<h2 class="container" align="center">
 			Hello <span th:text="${#authentication.name}"></span>
 		</h2>
-_)_
 		<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
 			This will only be displayed if authenticated user has role
 			ROLE_ADMIN.</div>
