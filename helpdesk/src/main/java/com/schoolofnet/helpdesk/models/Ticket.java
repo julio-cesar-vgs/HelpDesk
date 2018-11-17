@@ -7,7 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "tickets")
@@ -19,8 +23,8 @@ public class Ticket {
 
 	private String name;
 
-	@Column(name = "descricao")
-	private String desc;
+	@Column(name = "description")
+	private String description;
 
 	private Date created;
 
@@ -28,8 +32,16 @@ public class Ticket {
 
 	private Boolean finished;
 
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private User userOpen;
 
+	
+	@ManyToOne
+	@JoinColumn(name = "techinician_id")
+	@JsonBackReference
 	private User techinician;
 
 	public Long getId() {
@@ -49,11 +61,11 @@ public class Ticket {
 	}
 
 	public String getDesc() {
-		return desc;
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDesc(String description) {
+		this.description = description;
 	}
 
 	public Date getCreated() {
