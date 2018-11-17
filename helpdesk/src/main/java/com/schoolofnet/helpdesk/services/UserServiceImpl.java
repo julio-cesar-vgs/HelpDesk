@@ -18,13 +18,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private RolesRepository roleRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
 	public UserServiceImpl(UserRepository userRepository, RolesRepository roleRepository,
 			BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -42,10 +41,10 @@ public class UserServiceImpl implements UserService {
 	public User create(User user) {
 		// funcao para codificar a senha do usuario.
 		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
-		
+
 		Role userRole = this.roleRepository.findByName("USER");
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-		
+
 		return this.userRepository.save(user);
 	}
 
@@ -77,11 +76,9 @@ public class UserServiceImpl implements UserService {
 			// encode de uma senha codificada.
 			userExists.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 			userExists.setEmail(user.getEmail());
-			
-			
+
 			Role userRole = this.roleRepository.findByName(user.getRoles().iterator().next().getName());
 			userExists.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-			
 
 			this.userRepository.save(userExists);
 
@@ -93,6 +90,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User show(Long id) {
 		return findById(id);
+	}
+
+	@Override
+	public List<User> findAllWhereRoleEquals(Long role_id) {
+
+		return this.userRepository.findAllWhereRoleEquals(role_id);
+
 	}
 
 }
