@@ -17,8 +17,16 @@
 			</li>
 		</ul>
 		<ul class="navbar-nav ml-auto" sec:authorize="isAuthenticated()">
-			<li><a href="/logout" class="nav-link">Logout</a></li>
+			<li><a href="/logout" class="nav-link">Logout:</a></li>
 		</ul>
 	</div>
+	<!-- 	<div th:text="${#authentication.name}">The value of the "name" -->
+	<!-- 		property of the authentication object should appear here.</div> -->
+
+	<span sec:authentication="name"></span>
+	<div sec:authorize="hasRole('ROLE_ADMIN')">This content is only
+		shown to administrators.</div>
+	<div sec:authorize="hasRole('ROLE_USER')">This content is only
+		shown to users.</div>
 </nav>
 </html>
